@@ -18,6 +18,13 @@ func kokoaround(w http.ResponseWriter, r *http.Request, params httprouter.Params
 	setContentJsonHeader(w)
 	apimethod.GetAroundKoko(w, r, params)
 }
+
+/* ココをポストする */
+func postkoko(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	setContentJsonHeader(w)
+	apimethod.PostKoko(w, r, params)
+}
+
 /* APIのHTTP-HeaderにJsonを入れる*/
 func setContentJsonHeader(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
@@ -28,6 +35,7 @@ func main() {
 	router := httprouter.New()
 	router.POST("/koko", koko)
 	router.POST("/kokoaround", kokoaround)
+	router.POST("/postkoko", postkoko)
 	router.ServeFiles("/image/*filepath", http.Dir("image/"))
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
