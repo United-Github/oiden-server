@@ -9,24 +9,25 @@ import (
 
 /*ココの個別データを取得するメソッド*/
 func koko(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	setContentHeader(w)
-	apimethod.GetKoko(w, params)
+	setContentJsonHeader(w)
+	apimethod.GetKoko(w, r, params)
 }
 
 /* デバイスが存在する周囲のココをリストアップするメソッド */
 func kokoaround(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	setContentHeader(w)
-	apimethod.GetAroundKoko(w, params)
+	setContentJsonHeader(w)
+	apimethod.GetAroundKoko(w, r, params)
 }
-func setContentHeader(w http.ResponseWriter) {
+/* APIのHTTP-HeaderにJsonを入れる*/
+func setContentJsonHeader(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 }
 
 func main() {
 	router := httprouter.New()
-	router.GET("/koko", koko)
-	router.GET("/kokoaround", kokoaround)
+	router.POST("/koko", koko)
+	router.POST("/kokoaround", kokoaround)
 	router.ServeFiles("/image/*filepath", http.Dir("image/"))
 	log.Fatal(http.ListenAndServe(":8080", router))
 }

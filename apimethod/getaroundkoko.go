@@ -21,7 +21,7 @@ type KokoAround struct {
 }
 type ResponseKokoAround  [] KokoAround
 
-func GetAroundKoko(w http.ResponseWriter, params httprouter.Params){
+func GetAroundKoko(w http.ResponseWriter, r *http.Request, params httprouter.Params){
 	kokolist := ResponseKokoAround{
 		KokoAround{ID:2},
 		KokoAround{ID:1},

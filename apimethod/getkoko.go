@@ -5,11 +5,10 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"time"
 	"encoding/json"
+	"log"
 )
 // 指定したkokoを取得する GET
-type GetKokos struct {
-	kokolist []int `json:"koko"`
-}
+type GetKokoList[] int
 
 // kokoオブジェクト
 type Koko struct {
@@ -29,14 +28,21 @@ type Koko struct {
 }
 // 指定したkokoを取得するRESPONSE
 type ResponseKokos[] Koko
-func GetKoko(w http.ResponseWriter, params httprouter.Params) {
-	getKokoModel()
-	response := ResponseKokos{
-		Koko{ID:1},
-		Koko{ID:2},
+func GetKoko(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	var responseJson ResponseKokos
+	defer r.Body.Close()
+	decoder := json.NewDecoder(r.Body)
+	var list GetKokoList
+	err := decoder.Decode(&list)
+	if err != nil {
+		panic(err)
 	}
-	json.NewEncoder(w).Encode(response);
-
+	for _, value := range list {
+		t := Koko{ID: value}
+		responseJson = append(responseJson, t)
+	}
+	json.NewEncoder(w).Encode(responseJson)
+	log.Println("access getkoko")
 }
 
 func getKokoModel()  {
