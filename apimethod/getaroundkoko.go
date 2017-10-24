@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"github.com/julienschmidt/httprouter"
 	"encoding/json"
+	"log"
 )
 // 周囲のKokoを取得するGET
 type GetKokoAround struct {
@@ -22,12 +23,23 @@ type KokoAround struct {
 type ResponseKokoAround  [] KokoAround
 
 func GetAroundKoko(w http.ResponseWriter, r *http.Request, params httprouter.Params){
-	kokolist := ResponseKokoAround{
-		KokoAround{ID:2},
-		KokoAround{ID:1},
+
+	// request body をjsonにエンコード
+	defer r.Body.Close()
+	decoder := json.NewDecoder(r.Body)
+	var t = GetKokoAround{}
+	err := decoder.Decode(&t)
+	if err != nil {
+		panic(err)
 	}
-	json.NewEncoder(w).Encode(kokolist)
+	//response のjsonを作って書き込み
+	var responseJson ResponseKokoAround
+	responseJson = ResponseKokoAround{
+		KokoAround{Section:t.Section},
+	}
+	json.NewEncoder(w).Encode(responseJson)
 	getAroundKokoModel()
+	log.Println("access getaroundkoko")
 }
 
 func getAroundKokoModel() {
