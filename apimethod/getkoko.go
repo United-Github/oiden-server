@@ -1,27 +1,14 @@
-package main
+package apimethod
 
-import "time"
-
-// 周囲のKokoを取得するGET
-type GetKokoAround struct {
-	Section       string  `json:"section"`
-	LocationLati  float64 `json:"location_lati"` // 緯度
-	LocationLongi float64 `json:"location_longi"` // 経度
-	OverKokoid    int     `json:"over_kokoid"`
-}
-// 周囲のKokoを取得するRESPONSE
-type ResponseKokoAround struct {
-	Kokolist []struct {
-		ID            int     `json:"id"`
-		LocationLati  float64 `json:"location_lati"`
-		LocationLongi float64 `json:"location_longi"`
-		Section       string  `json:"section"`
-	} `json:"kokolist"`
-}
-
+import (
+	"net/http"
+	"github.com/julienschmidt/httprouter"
+	"time"
+	"encoding/json"
+)
 // 指定したkokoを取得する GET
 type GetKokos struct {
-	Koko []int `json:"koko"`
+	kokolist []int `json:"koko"`
 }
 
 // kokoオブジェクト
@@ -41,6 +28,17 @@ type Koko struct {
 	ParentID         int     `json:"parent_id"`
 }
 // 指定したkokoを取得するRESPONSE
-type ResponseKokos struct {
-	KokoList [] Koko `json:"koko-list"`
+type ResponseKokos[] Koko
+func GetKoko(w http.ResponseWriter, params httprouter.Params) {
+	getKokoModel()
+	response := ResponseKokos{
+		Koko{ID:1},
+		Koko{ID:2},
+	}
+	json.NewEncoder(w).Encode(response);
+
+}
+
+func getKokoModel()  {
+
 }
